@@ -1,0 +1,150 @@
+<!doctype html><html lang="kk"><head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Брондау • Qoima Go</title>
+<link rel="stylesheet" href="assets/style.css"/>
+</head><body>
+<header class="nav"><div class="container nav-inner">
+  <div class="brand"><div class="logo"></div><div><h1>Qoima Go</h1><small>Брондау</small></div></div>
+  <nav class="menu">
+    <a class="pill" href="index.html">Басты</a><a class="pill" href="calculator.html">Калькулятор</a>
+    <a class="pill" href="cabinet.html">Кабинет</a><a class="pill" href="admin.html">Admin</a>
+  </nav>
+</div></header>
+
+<main class="container">
+  <div class="grid">
+    <div class="card">
+      <h2>Тапсырыс деректері</h2>
+      <div class="row">
+        <div><label>Аты-жөні</label><input id="name" placeholder="Атыңыз"/></div>
+        <div><label>Телефон</label><input id="phone" placeholder="+7..."/></div>
+      </div>
+      <div class="row">
+        <div><label>Мекенжай (контейнер жеткізу үшін)</label><input id="addr" placeholder="Алматы, ..."/></div>
+        <div><label>Ескертпе</label><input id="note" placeholder="лифт жоқ, уақыт..." /></div>
+      </div>
+
+      <div class="hr"></div>
+      <h3>Қызмет параметрлері</h3>
+      <div class="row">
+        <div><label>Аудан (м²)</label><input id="sqm" type="number" min="1" value="5"/></div>
+        <div><label>Ай саны</label><input id="months" type="number" min="1" value="2"/></div>
+      </div>
+      <div class="row">
+        <div><label>Қашықтық (км)</label><input id="km" type="number" min="0" value="8"/></div>
+        <div><label>Локация</label><select id="loc"></select></div>
+      </div>
+      <div class="row">
+        <div class="notice">
+          <label><input id="d" type="checkbox" checked/> Контейнерді жеткізу</label><br/>
+          <label><input id="r" type="checkbox" checked/> Қайта жеткізу</label><br/>
+          <label><input id="p" type="checkbox"/> Қаптау</label><br/>
+          <label><input id="h" type="checkbox"/> Ауыр зат</label><br/>
+          <label><input id="i" type="checkbox" checked/> Сақтандыру</label>
+        </div>
+        <div class="notice" id="summary"></div>
+      </div>
+
+      <div class="btns">
+        <button class="btn" id="payBtn" type="button">Төлеу (демо)</button>
+        <a class="btn alt" href="cabinet.html">Кабинетте көру</a>
+      </div>
+      <div class="mini">* “Төлеу (демо)” — статусты Paid қылып сақтайды. Нақты Kaspi/Paybox қосу кейін.</div>
+    </div>
+
+    <div class="card">
+      <h2>Нақты GetSklad сияқты не бар?</h2>
+      <p class="mini">
+        ✅ калькулятор → ✅ бокс таңдау → ✅ брондау → ✅ төлеу → ✅ кабинет<br/>
+        Qoima Go-де қосымша: контейнерді үйге жеткізу, бір рет тиеу, қайта жеткізу.
+      </p>
+      <div class="hr"></div>
+      <div class="notice mini">
+        Чат-бот арқылы да осы брондау формасының логикасын қайталайсың:
+        “м² → ай → адрес → төлем”.
+      </div>
+    </div>
+  </div>
+</main>
+
+<script src="assets/data.js"></script>
+<script src="assets/app.js"></script>
+<script>
+  const params = new URLSearchParams(location.search);
+  const locSel = $("#loc");
+  window.QOIMA.locations.forEach((l,i)=>{
+    const o=document.createElement("option");
+    o.value=i; o.textContent=l.name;
+    locSel.appendChild(o);
+  });
+
+  // if passed from calculator
+  if(params.get("sqm")) $("#sqm").value = params.get("sqm");
+  if(params.get("months")) $("#months").value = params.get("months");
+  if(params.get("km")) $("#km").value = params.get("km");
+  if(params.get("loc")) $("#loc").value = params.get("loc");
+
+  ["d","r","p","h","i"].forEach(k=>{
+    if(params.get(k) !== null) $("#"+k).checked = params.get(k)==="1";
+  });
+
+  // if box selected
+  if(params.get("box")){
+    const box = window.QOIMA.boxTypes.find(b=>b.id===params.get("box"));
+    if(box) $("#sqm").value = box.sqm;
+  }
+
+  function render(){
+    const sqm = Number($("#sqm").value);
+    const months = Number($("#months").value);
+    const km = Number($("#km").value);
+    const q = QOIMA_APP.calcQuote({
+      sqm, months, km,
+      needDelivery: $("#d").checked,
+      needReturn: $("#r").checked,
+      packing: $("#p").checked,
+      heavy: $("#h").checked,
+      insured: $("#i").checked
+    });
+
+    $("#summary").innerHTML = `
+      <div><b>Сақтау:</b> ${QOIMA_APP.money(q.storage)}</div>
+      <div><b>Жеткізу:</b> ${QOIMA_APP.money(q.delivery)}</div>
+      <div><b>Қосымша:</b> ${QOIMA_APP.money(q.extras)}</div>
+      <div><b>Сақтандыру:</b> ${QOIMA_APP.money(q.insurance)}</div>
+      <div class="hr"></div>
+      <div><b>ЖАЛПЫ:</b> <span class="ok">${QOIMA_APP.money(q.total)}</span></div>
+    `;
+    return q;
+  }
+  $$("input,select").forEach(x=>x.addEventListener("input",render));
+  render();
+
+  $("#payBtn").addEventListener("click", ()=>{
+    const q = render();
+    const b = {
+      createdAt: new Date().toLocaleString("ru-RU"),
+      name: $("#name").value.trim() || "Аноним",
+      phone: $("#phone").value.trim() || "",
+      address: $("#addr").value.trim() || "",
+      note: $("#note").value.trim() || "",
+      sqm: Number($("#sqm").value),
+      months: Number($("#months").value),
+      km: Number($("#km").value),
+      loc: Number($("#loc").value),
+      locName: window.QOIMA.locations[Number($("#loc").value)]?.name || "",
+      needDelivery: $("#d").checked,
+      needReturn: $("#r").checked,
+      packing: $("#p").checked,
+      heavy: $("#h").checked,
+      insured: $("#i").checked,
+      boxLabel: "Custom",
+      total: q.total,
+      status: "Paid"
+    };
+    QOIMA_APP.upsertBooking(b);
+    alert("Төлем (демо) өтті ✅ Кабинеттен көре аласыз.");
+    location.href="cabinet.html";
+  });
+</script>
+</body></html>
