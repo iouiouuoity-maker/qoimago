@@ -1,0 +1,44 @@
+<!doctype html><html lang="kk"><head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Admin • Qoima Go</title>
+<link rel="stylesheet" href="assets/style.css"/>
+</head><body>
+<header class="nav"><div class="container nav-inner">
+  <div class="brand"><div class="logo"></div><div><h1>Qoima Go</h1><small>Admin</small></div></div>
+  <nav class="menu">
+    <a class="pill" href="index.html">Басты</a>
+    <a class="pill" href="book.html">Брондау</a>
+  </nav>
+</div></header>
+
+<main class="container">
+  <div class="card">
+    <h2>Брондаулар тізімі</h2>
+    <div class="row">
+      <div><label>PIN</label><input id="pin" type="password" placeholder="2026"/></div>
+      <div style="display:flex;align-items:flex-end"><button class="btn" id="open">Кіру</button></div>
+    </div>
+    <div class="hr"></div>
+    <div id="out"><div class="notice">Кіру үшін PIN енгізіңіз.</div></div>
+    <div class="hr"></div>
+    <button class="btn alt" id="wipe" type="button">Демо-деректерді тазалау</button>
+  </div>
+</main>
+
+<script src="assets/data.js"></script>
+<script src="assets/app.js"></script>
+<script>
+  $("#open").addEventListener("click", ()=>{
+    if($("#pin").value !== window.QOIMA.adminPin){
+      $("#out").innerHTML = `<div class="notice bad">PIN қате.</div>`;
+      return;
+    }
+    QOIMA_APP.renderAdmin($("#out"));
+  });
+  $("#wipe").addEventListener("click", ()=>{
+    localStorage.removeItem("qoimago_bookings");
+    alert("Тазаланды.");
+    location.reload();
+  });
+</script>
+</body></html>
