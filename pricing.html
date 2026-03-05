@@ -1,0 +1,26 @@
+<!doctype html><html lang="kk"><head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Бағалар • Qoima Go</title>
+<link rel="stylesheet" href="assets/style.css"/>
+</head><body>
+<header class="nav"><div class="container nav-inner">
+  <div class="brand"><div class="logo"></div><div><h1>Qoima Go</h1><small>Бағалар</small></div></div>
+  <nav class="menu">
+    <a class="pill" href="index.html">Басты</a><a class="pill" href="calculator.html">Калькулятор</a>
+    <a class="pill" href="locations.html">Локациялар</a><a class="pill" href="cabinet.html">Кабинет</a>
+  </nav>
+</div></header>
+
+<main class="container">
+  <div class="card">
+    <h2>Бокс түрлері</h2>
+    <p class="mini">Бағалар демо. Нақты тарифті кейін өзгерте саласың.</p>
+    <div id="boxes"></div>
+  </div>
+  <div class="footer">Төлем/ұзарту — кабинет арқылы.</div>
+</main>
+
+<script src="assets/data.js"></script>
+<script src="assets/app.js"></script>
+<script> QOIMA_APP.renderBoxes(document.getElementById("boxes")); </script>
+</body></html>
