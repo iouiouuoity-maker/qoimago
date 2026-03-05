@@ -24,5 +24,33 @@
 
 <script src="assets/data.js"></script>
 <script src="assets/app.js"></script>
-<script>QOIMA_APP.renderLocationsTable(document.getElementById("locTable"));</script>
+<script>
+  (function(){
+    const el = document.getElementById("locTable");
+    const locs = (window.QOIMA_DATA && QOIMA_DATA.locations) ? QOIMA_DATA.locations : [];
+
+    el.innerHTML = `
+      <table class="tbl">
+        <thead>
+          <tr>
+            <th>№</th>
+            <th>Нүкте</th>
+            <th>Аудан (м²)</th>
+            <th>Мекенжай</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${locs.map((l,i)=>`
+            <tr>
+              <td>${i+1}</td>
+              <td><b>${l.name || "-"}</b></td>
+              <td>${l.area || "-"}</td>
+              <td>${l.addr || l.address || "-"}</td>
+            </tr>
+          `).join("")}
+        </tbody>
+      </table>
+    `;
+  })();
+</script>
 </body></html>
