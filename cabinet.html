@@ -1,0 +1,56 @@
+<!doctype html><html lang="kk"><head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Кабинет • Qoima Go</title>
+<link rel="stylesheet" href="assets/style.css"/>
+</head><body>
+<header class="nav"><div class="container nav-inner">
+  <div class="brand"><div class="logo"></div><div><h1>Qoima Go</h1><small>Клиент кабинеті</small></div></div>
+  <nav class="menu">
+    <a class="pill" href="index.html">Басты</a><a class="pill" href="book.html">Брондау</a><a class="pill" href="admin.html">Admin</a>
+  </nav>
+</div></header>
+
+<main class="container">
+  <div class="card">
+    <h2>Менің брондауларым</h2>
+    <div class="row">
+      <div>
+        <label>Телефон (брондаудағыдай)</label>
+        <input id="phone" placeholder="+7..." />
+      </div>
+      <div style="display:flex;align-items:flex-end">
+        <button class="btn" id="find" type="button">Іздеу</button>
+      </div>
+    </div>
+    <div class="hr"></div>
+    <div id="out"></div>
+  </div>
+</main>
+
+<script src="assets/data.js"></script>
+<script src="assets/app.js"></script>
+<script>
+  $("#find").addEventListener("click", ()=>{
+    const phone = $("#phone").value.trim();
+    const items = QOIMA_APP.getMyBookings(phone);
+    if(items.length===0){
+      $("#out").innerHTML = `<div class="notice">Бұл телефонға брондау табылмады.</div>`;
+      return;
+    }
+    $("#out").innerHTML = `
+      <table>
+        <thead><tr><th>Күні</th><th>Деталь</th><th>Сома</th><th>Статус</th></tr></thead>
+        <tbody>
+          ${items.slice().reverse().map(x=>`
+            <tr>
+              <td class="mini">${x.createdAt}</td>
+              <td class="mini">${x.sqm}м² • ${x.months} ай • ${x.locName}</td>
+              <td><b>${QOIMA_APP.money(x.total)}</b></td>
+              <td class="${x.status==='Paid'?'ok':''}">${x.status}</td>
+            </tr>`).join("")}
+        </tbody>
+      </table>
+    `;
+  });
+</script>
+</body></html>
