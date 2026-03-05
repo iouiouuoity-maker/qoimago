@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="kk">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Qoima Go — бәрі бір жерде</title>
+  <link rel="stylesheet" href="assets/style.css" />
+</head>
+<body>
+<header class="nav">
+  <div class="container nav-inner">
+    <div class="brand">
+      <div class="logo"></div>
+      <div>
+        <h1>Qoima Go</h1>
+        <small>бәрі бір жерде, бәрі бір сәтте</small>
+      </div>
+    </div>
+    <nav class="menu">
+      <a class="pill" href="calculator.html">Калькулятор</a>
+      <a class="pill" href="pricing.html">Баға</a>
+      <a class="pill" href="locations.html">Локациялар</a>
+      <a class="pill" href="b2b.html">B2B</a>
+      <a class="pill" href="faq.html">FAQ</a>
+      <a class="pill" href="cabinet.html">Кабинет</a>
+    </nav>
+  </div>
+</header>
+
+<main class="container hero">
+  <div class="grid">
+    <div class="card">
+      <div class="kpi">
+        <span class="badge">📦 Контейнер үйіңе келеді</span>
+        <span class="badge">🔁 Бір рет тиеу</span>
+        <span class="badge">📲 Сайт + чат-бот</span>
+        <span class="badge">🚚 Қайта жеткізу</span>
+        <span class="badge">🔐 Smart қауіпсіздік</span>
+      </div>
+      <h2 style="margin-top:10px">Тасымалдау + сақтау + жеткізу — бір тізбек</h2>
+      <p>
+        Нарықтағы классикалық self-storage көбіне “кел – боксты ал – өзің тас” моделіне сүйенеді.
+        Qoima Go — контейнерді үйіңе апарып, бір рет тиеп, қауіпсіз сақтап, қажет кезде қайта жеткізетін all-in-one сервис.
+      </p>
+
+      <div class="btns">
+        <a class="btn" href="calculator.html">Бағаны есептеу</a>
+        <a class="btn alt" href="book.html">Брондау</a>
+        <a class="btn alt" href="locations.html">Карта/Локациялар</a>
+      </div>
+
+      <div class="hr"></div>
+      <h3>Қалай жұмыс істейді?</h3>
+      <p class="mini">
+        1) Контейнерді шақырасың → 2) Заттарды бір рет саласың → 3) Біз қоймаға апарамыз →
+        4) Қалаған кезде қайта жеткіземіз (чат-боттан бір батырма).
+      </p>
+    </div>
+
+    <div class="card">
+      <h2>Жылдам брондау</h2>
+      <p class="mini">Калькуляторсыз да болады — 30 секунд.</p>
+      <div class="row">
+        <div>
+          <label>Бокс типі</label>
+          <select id="quickBox"></select>
+        </div>
+        <div>
+          <label>Ай саны</label>
+          <select id="quickMonths">
+            <option>1</option><option>2</option><option>3</option><option>6</option><option>12</option>
+          </select>
+        </div>
+      </div>
+      <div class="btns">
+        <a class="btn" id="quickGo" href="book.html">Брондауға өту</a>
+      </div>
+
+      <div class="hr"></div>
+      <div class="notice mini">
+        Чат-ботты қосу үшін төменге өзіңнің Elfsight (немесе басқа) скриптіңді қоясың.
+      </div>
+
+      <!-- ЧАТ-БОТ (мысал: Elfsight) -->
+      <!--
+     <script src="assets/data.js"></script>
+<script src="assets/app.js"></script>
+<script src="assets/chatbot.js"></script>
+
+  <div class="footer">© Qoima Go • Алматы • 24/7 онлайн сервис</div>
+</main>
+
+<script src="assets/data.js"></script>
+<script src="assets/app.js"></script>
+<script>
+  const boxSel = document.getElementById("quickBox");
+  window.QOIMA.boxTypes.forEach(b=>{
+    const o=document.createElement("option");
+    o.value=b.id; o.textContent=`${b.title} • ${b.sqm} м²`;
+    boxSel.appendChild(o);
+  });
+  document.getElementById("quickGo").addEventListener("click",(e)=>{
+    e.preventDefault();
+    const box = boxSel.value;
+    const months = document.getElementById("quickMonths").value;
+    location.href = `book.html?box=${encodeURIComponent(box)}&months=${encodeURIComponent(months)}`;
+  });
+</script>
+</body>
+</html>
