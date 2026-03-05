@@ -1,0 +1,28 @@
+<!doctype html><html lang="kk"><head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Локациялар • Qoima Go</title>
+<link rel="stylesheet" href="assets/style.css"/>
+</head><body>
+<header class="nav"><div class="container nav-inner">
+  <div class="brand"><div class="logo"></div><div><h1>Qoima Go</h1><small>Локациялар</small></div></div>
+  <nav class="menu">
+    <a class="pill" href="index.html">Басты</a><a class="pill" href="calculator.html">Калькулятор</a><a class="pill" href="book.html">Брондау</a>
+  </nav>
+</div></header>
+
+<main class="container">
+  <div class="card">
+    <h2>6 нүкте • 5 440 м²</h2>
+    <div id="locTable"></div>
+    <div class="hr"></div>
+    <div class="notice mini">
+      Google Maps-ты дәл қою үшін: картаны аш → “Share/Embed a map” → iframe кодын осы жерге жапсырасың.
+    </div>
+    <!-- МАПА iframe осында -->
+  </div>
+</main>
+
+<script src="assets/data.js"></script>
+<script src="assets/app.js"></script>
+<script>QOIMA_APP.renderLocationsTable(document.getElementById("locTable"));</script>
+</body></html>
