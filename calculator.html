@@ -1,0 +1,121 @@
+<!doctype html><html lang="kk"><head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Калькулятор • Qoima Go</title>
+<link rel="stylesheet" href="assets/style.css"/>
+</head><body>
+<header class="nav"><div class="container nav-inner">
+  <div class="brand"><div class="logo"></div><div><h1>Qoima Go</h1><small>Онлайн калькулятор</small></div></div>
+  <nav class="menu">
+    <a class="pill" href="index.html">Басты</a><a class="pill" href="pricing.html">Баға</a>
+    <a class="pill" href="book.html">Брондау</a><a class="pill" href="cabinet.html">Кабинет</a>
+  </nav>
+</div></header>
+
+<main class="container">
+  <div class="grid">
+    <div class="card">
+      <h2>Бағаны есептеу</h2>
+
+      <div class="row">
+        <div>
+          <label>Бокс/аудан (м²)</label>
+          <select id="sqmSel"></select>
+        </div>
+        <div>
+          <label>Сақтау мерзімі (ай)</label>
+          <select id="months">
+            <option value="1">1</option><option value="2">2</option><option value="3">3</option>
+            <option value="6">6</option><option value="12">12</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="row">
+        <div>
+          <label>Қашықтық (км) — жеткізу үшін</label>
+          <input id="km" type="number" value="8" min="0"/>
+        </div>
+        <div>
+          <label>Локация</label>
+          <select id="loc"></select>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="notice">
+          <label><input id="needDelivery" type="checkbox" checked/> Контейнерді үйге жеткізу</label><br/>
+          <label><input id="needReturn" type="checkbox" checked/> Қайта жеткізу</label><br/>
+          <label><input id="packing" type="checkbox"/> Қаптау материалдары</label><br/>
+          <label><input id="heavy" type="checkbox"/> Ірі/ауыр заттар</label><br/>
+          <label><input id="insured" type="checkbox" checked/> Сақтандыру (демо)</label>
+        </div>
+        <div class="notice">
+          <div class="mini">Qoima Go ерекшелігі:</div>
+          <b>“бір рет тиеу”</b> → затты қайта-қайта көтермейсің → қауіп төмен.
+        </div>
+      </div>
+
+      <div class="btns">
+        <a class="btn" id="goBook" href="book.html">Осы есеппен брондау</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Нәтиже</h2>
+      <div id="out" class="notice"></div>
+      <div class="hr"></div>
+      <div class="mini">
+        Ескерту: Бұл — демонұсқа. Нақты тарифтерді assets/data.js ішінде 2 минутта өзгерте аласың.
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">24/7 — сайт + чат-бот</div>
+</main>
+
+<script src="assets/data.js"></script>
+<script src="assets/app.js"></script>
+<script>
+  // init selects
+  const sqmSel = $("#sqmSel");
+  window.QOIMA.boxTypes.forEach(b=>{
+    const o=document.createElement("option");
+    o.value=b.sqm; o.textContent=`${b.title} • ${b.sqm} м² (${b.fits})`;
+    sqmSel.appendChild(o);
+  });
+  const locSel = $("#loc");
+  window.QOIMA.locations.forEach((l,i)=>{
+    const o=document.createElement("option");
+    o.value=i; o.textContent=`${l.name} • ${l.area} м²`;
+    locSel.appendChild(o);
+  });
+
+  function render(){
+    const sqm = Number(sqmSel.value);
+    const months = Number($("#months").value);
+    const km = Number($("#km").value);
+    const needDelivery = $("#needDelivery").checked;
+    const needReturn = $("#needReturn").checked;
+    const packing = $("#packing").checked;
+    const heavy = $("#heavy").checked;
+    const insured = $("#insured").checked;
+
+    const q = QOIMA_APP.calcQuote({sqm, months, km, needDelivery, needReturn, packing, heavy, insured});
+    $("#out").innerHTML = `
+      <div><b>Сақтау:</b> ${QOIMA_APP.money(q.storage)}</div>
+      <div><b>Жеткізу:</b> ${QOIMA_APP.money(q.delivery)}</div>
+      <div><b>Қосымша сервис:</b> ${QOIMA_APP.money(q.extras)}</div>
+      <div><b>Сақтандыру:</b> ${QOIMA_APP.money(q.insurance)}</div>
+      <div class="hr"></div>
+      <div><b>ЖАЛПЫ:</b> <span class="ok">${QOIMA_APP.money(q.total)}</span></div>
+    `;
+
+    $("#goBook").href = `book.html?sqm=${sqm}&months=${months}&km=${km}`
+      + `&d=${needDelivery?1:0}&r=${needReturn?1:0}&p=${packing?1:0}&h=${heavy?1:0}&i=${insured?1:0}`
+      + `&loc=${encodeURIComponent($("#loc").value)}`;
+  }
+
+  $$("input,select").forEach(x=>x.addEventListener("input",render));
+  render();
+</script>
+</body></html>
